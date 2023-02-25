@@ -20,6 +20,7 @@ library(knitrBootstrap)
 library(dplyr)
 library(haven)
 library(table1)
+library(count)
 
 ```
 
@@ -119,7 +120,24 @@ filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
 
 
 
-```{r table1, echo = TRUE}
+```{r table1, echo = FALSE}
+
+
+# Generate one variable to capture treatment assignment (T1, T2, control)
+
+filtered_barrera$T1T2 <- case_when(
+  filtered_barrera$T1_treat == 1 ~ 1,
+  filtered_barrera$T2_treat == 1 ~ 2,
+  filtered_barrera$T1_treat == 0 & filtered_barrera$T2_treat == 0 ~ 0
+)
+
+
+# Confirm that this worked
+
+attach(filtered_barrera)
+check_table <- table(T1T2, T1_treat, T2_treat)
+ftable(check_table)
+
 
 # Using n = 5,799 to get the sample actually used in our model. Variables selected based on Table 1
 
@@ -139,12 +157,14 @@ filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
 # SISBEN - s_puntaje
 # household income - s_ingtotal
 
-table1(~ factor(s_teneviv)  | at_msamean, data=filtered_barrera)
+table1 <- table1(~ factor(s_teneviv)  | ~ factor(T1T2), data=filtered_barrera)
 
 ```
 
+table1
 
-```{r model1, echo = FALSE}
+
+```{r a, echo = FALSE}
 
 
 ```
@@ -169,7 +189,7 @@ summary(mod1)
 - Replication of a research paper: How do results compare to results of research paper?
 
 
-```{r model1, echo = FALSE}
+```{r b, echo = FALSE}
 
 
 ```

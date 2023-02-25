@@ -1,0 +1,178 @@
+---
+title: "Barrera-Osorio et al, 2011"
+author: "Dimitrios & Eva"
+date: "`r Sys.Date()`"
+output: 
+  powerpoint_presentation:
+    toc: true
+    toc_depth: 1
+    number_sections: true
+    # theme: cerulean
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# packages
+
+library(knitrBootstrap)
+library(dplyr)
+library(haven)
+library(table1)
+
+```
+
+
+
+
+# R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+# Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+# Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+# Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
+# Motivation
+
+- Why is this research question relevant?
+- What are the main hypotheses?
+
+
+# Data sources
+
+- Where does the data come from (country, time period, source)?
+- What are the key variables?
+- How are these measured?
+
+# Method
+
+- What are the assumptions of the method?
+- Are these assumptions plausible in this example?
+- Maybe: regression equation.
+
+
+
+
+```{r data_prep, echo = FALSE}
+
+# Importing STATA file
+
+barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
+
+# Turning variables into factor variables. Following STATA convention.
+
+barrera$i.s_teneviv <- as_factor(barrera$s_teneviv)
+barrera$i.s_estcivil <- as_factor(barrera$s_estcivil)
+barrera$i.s_estrato <- as_factor(barrera$s_estrato)
+barrera$i.grade <- as_factor(barrera$grade)
+
+
+# Filtering data in line with the following STATA code operations to reproduce table 3, columns 1-3:
+# Dropping ineligible cases from Suba: Drop if suba == 1 and grade is < 9
+# drop if suba == 1 & grade < 9; 
+# The above seems to be a mistake in the STATA code: this should be grade < 6 instead of < 9. 
+# Keeping only those who were selected for the survey:
+# keep if survey_selected;
+# Drop if they are in grade 11
+
+
+# Filtered data
+
+filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
+  filter(survey_selected == 1) %>%
+  filter(grade != 11)
+
+
+# Filtering data in line with the following STATA code operations to reproduce table 3, columns 4-6:
+
+filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
+  filter(survey_selected == 1) %>%
+  filter(grade != 11)
+
+```
+
+
+
+
+
+# Descriptive statistics
+
+- Describe sample
+
+
+
+```{r table1, echo = TRUE}
+
+# Using n = 5,799 to get the sample actually used in our model. Variables selected based on Table 1
+
+# House posessions - s_teneviv
+# utilities - s_utilities
+# durable goods - s_durables
+# physical infrastructure - s_infraest_hh
+# age - s_age_sorteo
+# gender - s_sexo
+# years of education - s_years
+# single head - s_single
+# Age of head - s_edadhead
+# years of ed head - s_yrshead
+# people in household - s_tpersona
+# Member under 18 - s_num18
+# estrato - s_estrato
+# SISBEN - s_puntaje
+# household income - s_ingtotal
+
+table1(~ factor(s_teneviv)  | at_msamean, data=filtered_barrera)
+
+```
+
+
+```{r model1, echo = FALSE}
+
+
+```
+
+
+# Results
+
+- Are these results plausible?
+- How robust are the results to changing the sample?
+
+```{r model1, echo = FALSE}
+
+mod1 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat,  cluster = "school_code")
+
+summary(mod1)
+
+```
+
+
+# Conclusion
+
+- Replication of a research paper: How do results compare to results of research paper?
+
+
+```{r model1, echo = FALSE}
+
+
+```
+
+
+

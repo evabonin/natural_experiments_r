@@ -24,10 +24,10 @@ barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
 
 # Would be good to add proper labels etc. to this
 
-i.s_teneviv <- factor(barrera$s_teneviv)
-i.s_estcivil <- factor(barrera$s_estcivil)
-i.s_estrato <- factor(barrera$s_estrato)
-i.grade <- factor(barrera$grade)
+barrera$i.s_teneviv <- as_factor(barrera$s_teneviv)
+barrera$i.s_estcivil <- as_factor(barrera$s_estcivil)
+barrera$i.s_estrato <- as_factor(barrera$s_estrato)
+barrera$i.grade <- as_factor(barrera$grade)
 
 
 
@@ -63,7 +63,7 @@ filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
 # What we want is a regression model with at_msamean as the outcome and T1_treat and T2_treat as the explanatory vars, for those who are not in Suba.
 
 
-mod1 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat,  cluster = "school_code")
+mod1 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat,  cluster = "school_code")
 
 summary(mod1)
 

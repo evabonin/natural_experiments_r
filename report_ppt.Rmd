@@ -1,5 +1,5 @@
 ---
-title: "Barrera-Osorio et al, 2011"
+title: "Barrera-Osorio et al 2011"
 author: "Dimitrios & Eva"
 date: "`r Sys.Date()`"
 output: 
@@ -7,9 +7,8 @@ output:
     toc: true
     toc_depth: 1
     number_sections: true
-    # theme: cerulean
-
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -20,36 +19,14 @@ library(knitrBootstrap)
 library(dplyr)
 library(haven)
 library(table1)
-library(count)
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+
 
 ```
 
 
-
-
-# R Markdown
-
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-
-# Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-# Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
-```
-
-# Slide with Plot
-
-```{r pressure}
-plot(pressure)
-```
 
 # Motivation
 
@@ -80,10 +57,36 @@ barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
 
 # Turning variables into factor variables. Following STATA convention.
 
-barrera$i.s_teneviv <- as_factor(barrera$s_teneviv)
-barrera$i.s_estcivil <- as_factor(barrera$s_estcivil)
-barrera$i.s_estrato <- as_factor(barrera$s_estrato)
-barrera$i.grade <- as_factor(barrera$grade)
+barrera$f_teneviv <- factor(barrera$s_teneviv)
+barrera$f_estcivil <- factor(barrera$s_estcivil, levels = c(1, 2, 3, 4, 5), labels = c("Free union", "Married", "Widow(er)", "Divorced", "Single"))
+barrera$f_estrato <- factor(barrera$s_estrato)
+barrera$f_grade <- factor(barrera$grade)
+barrera$f_sexo <- factor(barrera$s_sexo, levels = c(0,1), labels = c("Female", "Male"))
+barrera$f_single <- factor(barrera$s_single, levels = c(0,1), labels = c("No", "Yes"))
+barrera$f_over_age <- factor(barrera$s_over_age, levels = c(0,1), labels = c("No", "Yes"))
+barrera$f_suba <- factor(barrera$suba, levels = c(0,1), labels = c("San Cristobal", "Suba"))
+
+
+
+
+# Generate one variable to capture treatment assignment (T1, T2, control)
+
+barrera$T1T2T3 <- case_when(
+  barrera$T1_treat == 1 ~ 1,
+  barrera$T2_treat == 1 ~ 2,
+  barrera$T3_treat == 1 ~ 3,
+  barrera$T1_treat == 0 & barrera$T2_treat == 0 & barrera$T3_treat == 0 ~ 0
+)
+
+barrera$T1T2T3 <- factor(barrera$T1T2T3, level = c(0, 1, 2, 3), labels = c("Control", "Basic (T1)", "Savings (T2)", "Tertiary (T3"))
+
+
+# Confirm that this worked
+
+attach(barrera)
+check_table <- table(T1T2T3, T1_treat, T2_treat, T3_treat)
+ftable(check_table)
+
 
 
 # Filtering data in line with the following STATA code operations to reproduce table 3, columns 1-3:
@@ -97,16 +100,14 @@ barrera$i.grade <- as_factor(barrera$grade)
 
 # Filtered data
 
-filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
-  filter(survey_selected == 1) %>%
-  filter(grade != 11)
+filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6, survey_selected == 1, grade != 11)
 
 
 # Filtering data in line with the following STATA code operations to reproduce table 3, columns 4-6:
+# Same as above, but suba == 1 and in rade 9 or 10
 
-filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
-  filter(survey_selected == 1) %>%
-  filter(grade != 11)
+filtered_barrera2 <- barrera %>% filter(suba == 1, survey_selected == 1, grade >= 9, grade <= 10)
+
 
 ```
 
@@ -120,44 +121,35 @@ filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>%
 
 
 
-```{r table1, echo = FALSE}
+```{r table1, echo = TRUE}
 
 
-# Generate one variable to capture treatment assignment (T1, T2, control)
+# Using n = 5,799 to get the sample actually used in our model (for columns 1-3). Variables selected based on Table 1.
+# Note: Some factor variables are presented in the paper as scale vars.
 
-filtered_barrera$T1T2 <- case_when(
-  filtered_barrera$T1_treat == 1 ~ 1,
-  filtered_barrera$T2_treat == 1 ~ 2,
-  filtered_barrera$T1_treat == 0 & filtered_barrera$T2_treat == 0 ~ 0
-)
-
-
-# Confirm that this worked
-
-attach(filtered_barrera)
-check_table <- table(T1T2, T1_treat, T2_treat)
-ftable(check_table)
-
-
-# Using n = 5,799 to get the sample actually used in our model. Variables selected based on Table 1
-
-# House posessions - s_teneviv
+# House posessions - f_teneviv
 # utilities - s_utilities
 # durable goods - s_durables
 # physical infrastructure - s_infraest_hh
 # age - s_age_sorteo
 # gender - s_sexo
-# years of education - s_years
+# years of education - s_yrs
 # single head - s_single
 # Age of head - s_edadhead
 # years of ed head - s_yrshead
 # people in household - s_tpersona
 # Member under 18 - s_num18
-# estrato - s_estrato
+# estrato - f_estrato
 # SISBEN - s_puntaje
 # household income - s_ingtotal
 
-table1 <- table1(~ factor(s_teneviv)  | ~ factor(T1T2), data=filtered_barrera)
+
+
+
+
+
+
+table1 <- table1(~ factor(f_teneviv) + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + factor(f_sexo) + s_yrs + factor(f_single) + s_edadhead + s_yrshead + s_tpersona + s_num18 + factor(f_estrato) + s_puntaje + s_ingtotal | ~ factor(T1T2T3), data=filtered_barrera)
 
 ```
 
@@ -175,11 +167,39 @@ table1
 - Are these results plausible?
 - How robust are the results to changing the sample?
 
-```{r model1, echo = FALSE}
+```{r models, echo = FALSE}
 
 mod1 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat,  cluster = "school_code")
 
 summary(mod1)
+
+
+mod2 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,  cluster = "school_code")
+
+summary(mod2)
+
+
+mod3 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code),  cluster = "school_code")
+
+summary(mod3)
+
+
+mod4 <- miceadds::lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat,  cluster = "school_code")
+
+summary(mod4)
+
+
+mod5 <- miceadds::lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,  cluster = "school_code")
+
+summary(mod5)
+
+
+mod6 <- miceadds::lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat + + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code),  cluster = "school_code")
+
+summary(mod6)
+
+
+
 
 ```
 

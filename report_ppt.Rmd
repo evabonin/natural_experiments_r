@@ -214,5 +214,9 @@ summary(mod6)
 
 ```
 
+Source for clustered standard errors in R: https://evalf21.classes.andrewheiss.com/example/standard-errors/
+
+fixef(lmer(Reaction ~ Days + (1|Subject) + (0+Days|Subject), sleepstudy))
+
 
 

@@ -9,8 +9,8 @@ library(lmerTest)
 
 
 
-barrera <- read_dta("Public_Data_AEJApp_2010-0132.dta")
-View(barrera)
+barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
+#View(barrera)
 
 barrera$T1T2T3 <- case_when(
   barrera$T1_treat == 1 ~ 1,
@@ -76,7 +76,7 @@ summary(model1)
 filtered_barrera2 <- barrera %>% filter(suba == 1, grade >= 6) %>% filter(survey_selected == 1) %>% filter(grade >= 9 ) %>% filter(grade <= 10 )
 
 
-mod4 <- miceadds::lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat,  cluster = "school_code")
+mod4 <- lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat,  cluster = "school_code")
 
 summary(mod4)
 
@@ -94,7 +94,7 @@ barrera$school_code <- as.factor(barrera$school_code)
 # xi: reg at_msamean T1_treat T2_treat $varbaseline if suba == 0, cluster(school_code);
 # Same model as 1, but including all the demographic variables above
 
-mod2 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age,  cluster = "school_code")
+mod2 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age,  cluster = "school_code")
 
 summary(mod2)
 
@@ -109,7 +109,7 @@ summary(mod2)
 
 filtered_barrera$school_code <- as.factor(filtered_barrera$school_code)
 
-mod3 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age + school_code,  cluster = "school_code")
+mod3 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age + school_code,  cluster = "school_code")
 
 model3 <- lm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age + school_code)
 

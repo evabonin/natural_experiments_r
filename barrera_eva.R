@@ -299,12 +299,58 @@ grid.arrange(plot_bi, plot_gau, nrow = 2)
 
 
 #############################################################################################
+# Trying again to run this with stata standard errors
+library(modelsummary)
+#library(fixest)
+
+feols_m1 <- feols(data = filtered_barrera,
+               at_msamean ~ T1_treat + T2_treat,
+               cluster = ~ school_code)
+
+feols_m2 <- feols(data = filtered_barrera, 
+                  at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,
+                  cluster = ~ school_code)
+
+feols_m3 <- feols(data = filtered_barrera, 
+                  at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age | school_code,
+                  cluster = ~ school_code)
+
+# specify hypothesis tests
+library(car)
+hyp1 <- linearHypothesis(feols_m1, "T1_treat - T2_treat = 0")
+hyp2 <- linearHypothesis(feols_m2, "T1_treat - T2_treat")
+hyp3 <- linearHypothesis(feols_m3, "T1_treat - T2_treat")
 
 
+# Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
+
+rows <- tribble(~term, ~"(1)", ~"(2)", ~"(3)",
+                "Chi-squared", hyp1[,2][2], hyp2[,2][2], hyp3[,2][2],
+                "p-value", hyp1[,3][2], hyp2[,3][2], hyp3[,3][2],
+                "Demographic controls", 0,1,1)
+attr(rows, "position") <- c(5,6,9)
+
+modelsummary(list(feols_m1, feols_m2, feols_m3), 
+             coef_omit = -c(2,3), 
+             gof_omit = "AIC|BIC|RMSE|R2 W|R2 A", 
+             add_rows = rows,
+             coef_rename = c("Basic treatment","Savings treatment"),
+             title = "Table 3 - Effects on Monitored School Attendance Rates"
+             )
+
+library(lmtest)
+library(sandwich)
+
+feols <- list(feols_m1, feols_m2, feols_m3)
+hyps <- list(hyp1, hyp2, hyp3)
 
 
+modelsummary(feols,
+             coef_omit = -c(2,3), 
+             gof_map = c("nobs", "r.squared"), 
+)
 
-
+#############################################################################################
 
 
 

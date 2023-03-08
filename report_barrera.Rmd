@@ -26,20 +26,25 @@ library(haven)
 library(table1)
 
 # lm.cluster function
-library(lmtest)
+#library(lmtest)
 
-library(miceadds)
+#library(miceadds)
 library(ggplot2)
 library(sandwich)
 
 # visualise residuals for clustered regression
 library(visreg)
+
 #library(sjPlot)
 #library(sjmisc)
 #library(sjlabelled)
 
 library(tidyverse)       # For ggplot, dplyr, and friends
-library(broom)           # Convert model objects into data frames
+library(broom)           # Convert model objects into data frames (augment)
+library(car)            # Durbin-Watson-Test
+
+library(modelsummary) # modelsummary()
+library(fixest) # feols()
 
 
 ```
@@ -49,11 +54,9 @@ library(broom)           # Convert model objects into data frames
 # Motivation
 
 
-
-##Why is this research question relevant?
+## Why is this research question relevant?
 
 Education in Colombia and other middle-income countries face challenges such as high dropout rates among low-income students, and the reasons behind them, such as the high cost of education. Conditional cash transfers (CCTs) are an evidence-based intervention to increase participation in education. However, the authors highlight that there is little variability in the structure of programmes. The paper investigates if changes in the timing of payments affect the outcomes of interest: Attendance and re-enrollment. Optimising the structure of CCTs may contribute to improved education outcomes and reduce disparities in access to education.
-
 
 ## What are the main hypotheses?
 
@@ -74,7 +77,6 @@ For this project, we reference the following files:
 Add
 
 ## What are the key variables and ow are these measured?
-
 Add
 
 
@@ -106,9 +108,10 @@ The eligibility criteria for the tertiary education experiment were as follows:
 
 The paper investigates differences in enrollment and graduation / progression to tertiary education for the three treatment groups compared to untreated controls. Randomization to treatment vs control group was stratified by location, school public vs private, gender and grade.
 
+
 ## Data preparation
 
-
+some text here
 
 ```{r data_prep, echo = FALSE}
 
@@ -126,8 +129,6 @@ barrera$f_sexo <- factor(barrera$s_sexo, levels = c(0,1), labels = c("Female", "
 barrera$f_single <- factor(barrera$s_single, levels = c(0,1), labels = c("No", "Yes"))
 barrera$f_over_age <- factor(barrera$s_over_age, levels = c(0,1), labels = c("No", "Yes"))
 barrera$f_suba <- factor(barrera$suba, levels = c(0,1), labels = c("San Cristobal", "Suba"))
-
-
 
 
 # Generate one variable to capture treatment assignment (T1, T2, control)
@@ -156,10 +157,12 @@ barrera$T1T2T3 <- factor(barrera$T1T2T3, level = c(0, 1, 2, 3), labels = c("Cont
 filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6, survey_selected == 1, grade != 11)
 
 
-# Filtering data in line with the following STATA code operations to reproduce table 3, columns 4-6:
+# Filtering data in line with the following STATA code operations to reproduce table 4, columns 4-6:
 # Same as above, but suba == 1 and in rade 9 or 10
 
 filtered_barrera2 <- barrera %>% filter(suba == 1, survey_selected == 1, grade >= 9, grade <= 10)
+
+# For table 4, just results, not procedure
 
 ```
 
@@ -167,33 +170,72 @@ ADD: Steps we've taken to use the data.
 The dataset for our analysis is called "filtered_barrera" (put this to R-code).
 
 
-##Analysis
+## Analysis
 
 ### What are the assumptions of the method?
 
-For Model 1: 
-From ChatGPT:
-Linear regression is a statistical technique used to model the relationship between a dependent variable and one or more independent variables. The assumptions about the data underlying linear regression are:
+The authors initially use simple linear regression to compare treatment groups. They model the relationship between a dependent variable (outcome; attendance) and two independent variables (whether participant is allocated to treatment "basic", and whether participant is allocated to treatment "savings".)
 
-1. Linearity: There should be a linear relationship between the independent and dependent variables. This means that as the independent variable changes, the dependent variable changes proportionally.
+The assumptions about the data underlying linear regression are:
+
+1. Linearity: There should be a linear relationship between the independent and dependent variables.
 
 2. Independence: The observations used in the regression analysis should be independent of each other. In other words, the value of one observation should not be influenced by the value of another observation.
 
-3. Homoscedasticity: Homoscedasticity refers to the assumption that the variance of the dependent variable is constant across all values of the independent variable(s). This means that the spread of the residuals (the difference between the predicted value and the actual value) should be the same across all levels of the independent variable(s).
+3. Homoscedasticity: The variance of the dependent variable should be constant across all values of the independent variable(s).
 
-4. Normality: The dependent variable should be normally distributed at each level of the independent variable(s). This means that the residuals should be normally distributed and the distribution of the dependent variable should be symmetrical around the mean.
+4. Normality: The dependent variable should be normally distributed at each level of the independent variable(s).
 
-5. No multicollinearity: If there are multiple independent variables in the regression model, there should be no high correlation between these independent variables. This means that the independent variables should be unrelated to each other.
+5. No multicollinearity: If there are multiple independent variables in the regression model, there should be no high correlation between these independent variables.
 
-Violations of these assumptions can lead to biased or inefficient estimates of the regression coefficients and incorrect inferences about the relationship between the independent and dependent variables. Therefore, it is important to check these assumptions before interpreting the results of a linear regression analysis.
-
-Fixed effect models: Used to control for unobserved factors that are constant over time at any level of analysis. The key is to identify the appropriate level of analysis for the fixed effect and include it in the model to account for the unobserved factors that affect the outcome variable. In this case, the school was chosen as the fixed effect, while standard errors are clustered within the individual.This reflects the multiple levels of clustering off effects (unobserved school characteristics and unobserved characteristics of individuals).
+If these assumptions are not met, this can lead to unreliable estimators (regression coefficients) and / or
+biased standard errors, i.e. standard errors that are systematically smaller or larger than the "true" standard error. This means that the relationship between dependent and independent variables is not estimated correctly by the model.
 
 
 ### Are these assumptions plausible in this example?
 
-Assumptions of linear regression:
-The authors do not discuss this.
+We test the assumptions of the most simple model using the procedure detailed [here](https://godatadrive.com/blog/basic-guide-to-test-assumptions-of-linear-regression-in-r):
+
+
+```{r mod0, echo = FALSE}
+
+mod0 <- lm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat)
+# 1. Linearity and 3. heteroskedasticity
+plot(mod0, 1)
+
+# 2. Independence
+durbinWatsonTest(mod0)
+
+# 4. Normality
+plot(mod0, 3)
+
+
+# Plotting fitted vs actual values
+# Souce: http://www.sthda.com/english/articles/39-regression-model-diagnostics/161-linear-regression-assumptions-and-diagnostics-in-r-essentials/
+model.diag.mod0 <- augment(mod0)
+
+ggplot(model.diag.mod0, aes(at_msamean, T1_treat)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = at_msamean, yend = .fitted), color = "red", size = 0.3)
+
+
+```
+
+
+One violation that should be expected based on the data is that of independence. Observations are clustered within schools and also individuals. The authors address this issue by clustering error terms at the school level: 
+
+
+Model 1:
+$$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \epsilon_{ij} $$ 
+
+Model 2: 
+$$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \delta X_{ijk} + \theta_{j} + \epsilon_{ij} $$ 
+
+
+
+
+Fixed effect models: Used to control for unobserved factors that are constant over time at any level of analysis. The key is to identify the appropriate level of analysis for the fixed effect and include it in the model to account for the unobserved factors that affect the outcome variable. In this case, the school was chosen as the fixed effect, while standard errors are clustered within the individual.This reflects the multiple levels of clustering off effects (unobserved school characteristics and unobserved characteristics of individuals).
 
 Problem: While there are some plots built into R, a lot of these just don't work easily with clustered data.
 My workaround: Plotting on the simplest model (model 1) to show that simple linear regression would not have been a good choice. But that seems very obvious.
@@ -240,8 +282,6 @@ filtered_barrera %>%
 ```
 
 
-### Maybe: regression equation.
-
 
 
 
@@ -279,18 +319,13 @@ filtered_barrera %>%
 # household income - s_ingtotal
 
 
-
-
-
-
-
 table1 <- table1(~ factor(f_teneviv) + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + factor(f_sexo) + s_yrs + factor(f_single) + s_edadhead + s_yrshead + s_tpersona + s_num18 + factor(f_estrato) + s_puntaje + s_ingtotal | ~ factor(T1T2T3), data=filtered_barrera)
 
-
+table1
 
 ```
 
-table1
+
 
 
 ```{r a, echo = FALSE}
@@ -310,38 +345,28 @@ table1
 
 # Models
 
+feols_m1 <- feols(data = filtered_barrera,
+               at_msamean ~ T1_treat + T2_treat,
+               cluster = ~ school_code)
 
-# Model 1
+feols_m2 <- feols(data = filtered_barrera,
+                  at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,
+                  cluster = ~ school_code)
 
-mod1 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat,  cluster = "school_code")
-#mod1 <- lm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat)
-summary(mod1)
-#summary(mod1, cluster = "school_code")
-
-
-# Model 2
-mod2 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,  cluster = "school_code")
-summary(mod2)
-
+feols_m3 <- feols(data = filtered_barrera,
+                  at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age | school_code,
+                  cluster = ~ school_code)
 
 
-# Model 3
-mod3 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code),  cluster = "school_code")
-summary(mod3)
+# specify hypothesis tests
+hypothesis(feols_m1, "T1_treat = T2_treat")
+
+# create summary table with hypothesis test
+modelsummary(feols_m1, hypothesis = "T1_treat = T2_treat")
 
 
-# # Model 4
-# mod4 <- lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat,  cluster = "school_code")
-# summary(mod4)
-# # Model 5
-# mod5 <- lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,  cluster = "school_code")
-# summary(mod5)
-# # Model 6
-# mod6 <- lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat + + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code),  cluster = "school_code")
-# summary(mod6)
-
-
-
+# Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
+modelsummary(list("Basic" = feols_m1, "feols_m2, feols_m3), coef_omit = -c(2,3), output = "markdown")
 
 ```
 
@@ -421,6 +446,9 @@ grid.arrange(plot_bi, plot_gau, nrow = 2)
 # Conclusion
 
 - Replication of a research paper: How do results compare to results of research paper?
+
+Models all bad, R-sq low.
+
 
 Compare coefficients, standard errors
 Why might they be different?

@@ -1,334 +1,124 @@
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kableExtra::kable_classic() |> group_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2),
-add_header_above(c("Test " = 1, "Basic - Savings" = 3))
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2),
-add_header_above(c("Test " = 1, "Basic - Savings" = 3))
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)),
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c("Test " = 1, "Basic - Savings" = 3)
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3) |>
-footnote(general = "We've created a footnote.")
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3) |>
-footnote(general = "We've created a footnote.")
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(3),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-fmt = fmt_decimal(2), statistic = "r.squared",
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-get_estimates(model)
-get_estimates(feols_m3)
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-gof_map(fmt = function(r.squared), format(round(x,2), big.mark=","))
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-gof_map(fmt = function(r.squared), format(round(x,2), big.mark=",")),
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-gof_map(fmt = function(r.squared) format(round(x,2), big.mark=",")),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-gof_map = fmt = function(r.squared) format(round(x,2), big.mark=","),
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-gof_map = function(r.squared) format(round(x,2), big.mark=","),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-gof_map = (function(r.squared) format(round(x,2), big.mark=",")),
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-output = "markdown"
-add_rows = rows,
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-output = "markdown",
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-output = "latex",
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
-?modelsummary
-install.packages(c("bookdown", "emmeans", "future", "Hmisc", "MASS", "tibble"))
-install.packages("bookdown")
+
+
 # packages -> double check that all these are needed.
+
+
 #library(knitrBootstrap)
 library(dplyr)
+
 # reading STATA files
 library(haven)
 library(table1)
+
 # lm.cluster function
 #library(lmtest)
+
 library(ggplot2)
 #library(sandwich)
+
 # visualise residuals for clustered regression
 #library(visreg)
+
 #library(sjPlot)
 #library(sjmisc)
 #library(sjlabelled)
+
 library(tidyverse)       # For ggplot, dplyr, and friends
 library(broom)           # Convert model objects into data frames (augment)
 library(car)            # Durbin-Watson-Test
+
 library(modelsummary) # modelsummary()
 library(fixest) # feols()
 library(kableExtra)
+
+
+
 # # Motivation
-#
-#
+# 
+# 
 # ## Why is this research question relevant?
-#
+# 
 # Education in Colombia and other middle-income countries face challenges such as high dropout rates among low-income students, and the reasons behind them, such as the high cost of education. Conditional cash transfers (CCTs) are an evidence-based intervention to increase participation in education. However, the authors highlight that there is little variability in the structure of programmes. The paper investigates if changes in the timing of payments affect the outcomes of interest: Attendance and re-enrollment. Optimising the structure of CCTs may contribute to improved education outcomes and reduce disparities in access to education.
-#
+# 
 # ## What are the main hypotheses?
-#
+# 
 # * The savings model will improve outcomes compared to the basic programme by relaxing possible savings constraints.
 # * The tertiary model will improve rates of graduation and tertiary enrollment compared to the basic programme by providing direct incentives for continuation of education.
-#
+# 
 # # Data sources
-#
+# 
 # We investigated performing the replication with the data provided as part of the lecture. However, we soon discovered that the file did not contain all required variables, nor was there any meta data or other information about the variables in the dataset. A brief search revealed that the data and STATA scripts used to obtain the authors' results are [freely available here](https://www.openicpsr.org/openicpsr/project/113783/version/V1/view?path=/openicpsr/113783/fcr:versions/V1/AEJApp_2010-0132_Data&type=folder).
-#
+# 
 # For this project, we reference the following files:
 # * Data file: Public_Data_AEJApp_2010-0132.dta
 # * STATA script for Table 3: Table_03_Attendance.do
 # * Meta data: AEJApp_2010-0132_Data_ReadMe.pdf
-#
-#
+# 
+# 
 # ## Where does the data come from (country, time period, source)?
 # Data were collected in San Christobal ("Basic" and "Savings" experiments) and in Suba ("Tertiary" experiment) and combined from six different sources:
 # * SISBEN surveys 2003 and 2004: Baseline data on eligible families
 # * Programme registration data: Basic information on students
 # * Administrative records: Enrollment records
 # * Direct observation in 68 out of 251 schools: Attendance data in last quarter of 2005 for 7,158 students.
-# * Survey in 68 schools: Baseline data collection in 2005.
+# * Survey in 68 schools: Baseline data collection in 2005. 
 # * Survey in 68 schools: Follow-up in 2006.
-#
+# 
 # ## What are the key variables and ow are these measured?
 # Key variables for the replication of Table 3 are the outcome variable, *at_msamean*. This measures the percentage of days absent using a verified attendance measure (see metadata doc) and takes values between 0 and 1 (scale).
-#
-#
+# 
+# 
 # ####################################################################################################
 # ####################################################################################################
-# Additionally,
+# Additionally, 
 # ####################################################################################################
 # ####################################################################################################
+
+
 # # Method
-#
+# 
 # ## Research design
 # The research paper describes three interventions designed to improve attendance and educational outcomes for students in Colombia.
-#
+# 
 # The first intervention ("basic") is similar to the PROGRESA/OPORTUNIDADES program, a conditional cash transfer program in Mexico that operated from 1997 to 2012. It pays participants 30,000 pesos per month (approximately USD 15) if the child attends at least 80% of the days in that month. Payments are made bi-monthly through a dedicated debit card, and students will be removed from the program if they fail to meet attendance targets or are expelled from school.
-#
+# 
 # The second intervention, called the savings treatment, pays two-thirds of the monthly amount (20,000 pesos or USD 10) to students' families on a bi-monthly basis, while the remaining one-third is held in a bank account. The accumulated funds are then made available to students' families during the period in which students prepare to enroll for the next school year, with 100,000 pesos (US$50) available to them in December if they reach the attendance target every month.
-#
+# 
 # The third intervention, called the tertiary treatment, incentivizes students to graduate and matriculate to a higher education institution. The monthly transfer for good attendance is reduced from 30,000 pesos per month to 20,000 pesos, but upon graduating, the student earns the right to receive a transfer of 600,000 pesos (USD 300) if they enroll in a tertiary institution, and after a year if they fail to enroll upon graduation.
-#
+# 
 # Students were removed from the program if they fail to meet attendance targets, fail to matriculate to the next grade twice, or are expelled from school.
-#
+# 
 # In our replication, we focus on the first and second intervention.
-#
+# 
 # The eligibility criteria for the "basic" and "savings" experiments were as follows:
-#
+# 
 # * Children had to have finished grade 5 and be enrolled in grades 6 - 10.
 # * The children's families had to be classified into the bottom two categories on Colombia's poverty index (SISBEN).
 # * Only households living in San Cristobal prior to 2004 were eligible to participate.
-#
+# 
 # The paper investigates differences in enrollment and graduation / progression to tertiary education for the three treatment groups compared to untreated controls. Randomization to treatment vs control group was stratified by location, school public vs private, gender and grade.
-#
-#
+# 
+# 
 # ## Data preparation
-#
+# 
 # We imported the data file from STATA format and prepared it for analysis by first turning categorical variables into factors. For convenience when producing graphs, we combined the three treatment indicators into a single factor variable with four expressions (0 = control group, 1 = T1, 2 = T2, 3 = T3).
-#
+# 
 # We then translated the STATA commands to filter the data in line with the inclusion criteria:
-#
-# * Dropping ineligible cases from Suba: Drop if suba == 1
+# 
+# * Dropping ineligible cases from Suba: Drop if suba == 1 
 # * Keeping only those who were selected for the survey in schools: survey_selected == 1
 # * Drop if grade is < 6 or grade is 11
+
+
+
+
+
 # Importing STATA file
+
 barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
+
 # Turning variables into factor variables --> is this the correct approach?
+
 barrera$f_teneviv <- factor(barrera$s_teneviv)
 barrera$f_estcivil <- factor(barrera$s_estcivil, levels = c(1, 2, 3, 4, 5), labels = c("Free union", "Married", "Widow(er)", "Divorced", "Single"))
 barrera$f_estrato <- factor(barrera$s_estrato)
@@ -337,95 +127,157 @@ barrera$f_sexo <- factor(barrera$s_sexo, levels = c(0,1), labels = c("Female", "
 barrera$f_single <- factor(barrera$s_single, levels = c(0,1), labels = c("No", "Yes"))
 barrera$f_over_age <- factor(barrera$s_over_age, levels = c(0,1), labels = c("No", "Yes"))
 barrera$f_suba <- factor(barrera$suba, levels = c(0,1), labels = c("San Cristobal", "Suba"))
+
+
 # Generate one variable to capture treatment assignment (T1, T2, control)
+
 barrera$T1T2T3 <- case_when(
-barrera$T1_treat == 1 ~ 1,
-barrera$T2_treat == 1 ~ 2,
-barrera$T3_treat == 1 ~ 3,
-barrera$T1_treat == 0 & barrera$T2_treat == 0 & barrera$T3_treat == 0 ~ 0
+  barrera$T1_treat == 1 ~ 1,
+  barrera$T2_treat == 1 ~ 2,
+  barrera$T3_treat == 1 ~ 3,
+  barrera$T1_treat == 0 & barrera$T2_treat == 0 & barrera$T3_treat == 0 ~ 0
 )
+
 barrera$T1T2T3 <- factor(barrera$T1T2T3, level = c(0, 1, 2, 3), labels = c("Control", "Basic (T1)", "Savings (T2)", "Tertiary (T3"))
+
+
 # Filtering data in line with the following STATA code operations to reproduce table 3, columns 1-3:
 # Dropping ineligible cases from Suba: Drop if suba == 1 and grade is < 9
-# drop if suba == 1 & grade < 9;
-# The above seems to be a mistake in the STATA code: this should be grade < 6 instead of < 9.
+# drop if suba == 1 & grade < 9; 
+# The above seems to be a mistake in the STATA code: this should be grade < 6 instead of < 9. 
 # Keeping only those who were selected for the survey:
 # keep if survey_selected;
 # Drop if they are in grade 11
+
+
 # Filtered data for analysis
+
 filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6, survey_selected == 1, grade != 11)
+
+
+ 
 # ## Analysis
-#
+# 
 # ### What are the assumptions of the method?
-#
+# 
 # The authors initially use simple linear regression to compare treatment groups. They model the relationship between a dependent variable (outcome; attendance) and two independent variables (whether participant is allocated to treatment "basic", and whether participant is allocated to treatment "savings".)
-#
+# 
 # The assumptions about the data underlying linear regression are:
-#
+#   
 #   1. Linearity: There should be a linear relationship between the independent and dependent variables.
-#
+# 
 # 2. Independence: The observations used in the regression analysis should be independent of each other. In other words, the value of one observation should not be influenced by the value of another observation.
-#
+# 
 # 3. Homoscedasticity: The variance of the dependent variable should be constant across all values of the independent variable(s).
-#
+# 
 # 4. Normality: The dependent variable should be normally distributed at each level of the independent variable(s).
-#
+# 
 # 5. No multicollinearity: If there are multiple independent variables in the regression model, there should be no high correlation between these independent variables.
-#
+# 
 # If these assumptions are not met, this can lead to unreliable estimators (regression coefficients) and / or biased standard errors, i.e. standard errors that are systematically smaller or larger than the "true" standard error. This means that the relationship between dependent and independent variables is not estimated correctly by the model.
-#
-#
+# 
+# 
 # ### Are these assumptions plausible in this example?
-#
+# 
 # We test the assumptions of the simplest regression model using the procedure detailed [here](https://godatadrive.com/blog/basic-guide-to-test-assumptions-of-linear-regression-in-r).
+
+
+
+
+
 # Setting up model
 mod0 <- lm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat)
+
 # 1. Linearity and 3. heteroskedasticity
 plot(mod0, 1)
+
 # The plot is not what we would typically expect if these assumptions were fulfilled.
+
 # 2. Independence
 durbinWatsonTest(mod0)
+
 # A result for the p-value > 0.05 would suggest we can reject the Null hypothesis and the assumption is met.
+
 # 4. Normality
 plot(mod0, 3)
+
 # This is again not a typical plot.
+
+
 # Plotting fitted vs actual values for T1
+
 # Souce: http://www.sthda.com/english/articles/39-regression-model-diagnostics/161-linear-regression-assumptions-and-diagnostics-in-r-essentials/
+
 model.diag.mod0 <- augment(mod0)
+
 ggplot(model.diag.mod0, aes(at_msamean, T1_treat)) +
-geom_point() +
-stat_smooth(method = lm, se = FALSE) +
-geom_segment(aes(xend = at_msamean, yend = .fitted), color = "red", linewidth = 0.3)
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = at_msamean, yend = .fitted), color = "red", linewidth = 0.3)
+
 # And another atypical plot.
+
+
+
+
 # The plots reflect the model set-up, where averages are estimated by treatment group. There appears to be little variation in predicted attendance within groups. This is further explored graphically below.
+
+
+
 # Plotting the outcome variable
+
 # A boxplot for each group
 ggplot(filtered_barrera, aes(x = T1T2T3, y = at_msamean)) +
-geom_boxplot() +    # Box plot for visualization
-labs(x = "Treatment", y = "Attendance %")  # Label the axes
+  geom_boxplot() +    # Box plot for visualization
+  labs(x = "Treatment", y = "Attendance %")  # Label the axes
+
 # Histogram of the outcome variable
+
 hist(filtered_barrera$at_msamean)
+
+
 # Create separate histograms of at_msamean for each level of T1T2T3
+
 ggplot(filtered_barrera, aes(x = at_msamean)) +
-geom_histogram(binwidth = 0.07, alpha = 0.5, position = "identity") +
-labs(x = "Attendance %", y = "Frequency") +
-facet_wrap(~T1T2T3, ncol = 3) +
-geom_vline(xintercept = 0.8, color = "red", linetype = "dashed")+
-theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
-panel.spacing = unit(0.5, "lines"))
-# We can see that a large proportion of each sample has an attendance record above the 80% requirement, explaining the skew of the distribution observed in the box plots. It is therefore unlikely that
+  geom_histogram(binwidth = 0.07, alpha = 0.5, position = "identity") +
+  labs(x = "Attendance %", y = "Frequency") +
+  facet_wrap(~T1T2T3, ncol = 3) +
+  geom_vline(xintercept = 0.8, color = "red", linetype = "dashed")+
+  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        panel.spacing = unit(0.5, "lines"))
+
+
+
+# We can see that a large proportion of each sample has an attendance record above the 80% requirement, explaining the skew of the distribution observed in the box plots. It is therefore unlikely that 
+
+
+
 ## Model specifications
-# In addition to the above, one violation that should be expected based on the data is that of independence. It is likely that there are unobserved characteristics at the school level (e.g. school culture and rules) that affect the outcome. The following equations show formally how the analyses were conceptualised(where i is the individual and j is the school). While the authors state that standard errors are clustered also clustered within the individual, the STATA code suggests that the only clustering variable was the school (*school code*), and this is what we have replicated below.
+
+# In addition to the above, one violation that should be expected based on the data is that of independence. It is likely that there are unobserved characteristics at the school level (e.g. school culture and rules) that affect the outcome. The following equations show formally how the analyses were conceptualised(where i is the individual and j is the school). While the authors state that standard errors are clustered also clustered within the individual, the STATA code suggests that the only clustering variable was the school (*school code*), and this is what we have replicated below. 
+
 # Model 1:
-#  $$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \epsilon_{ij} $$
-# Model 1 is a simple linear model with only treatment allocation as the dependent variable, while model 2 also includes a collection of student and household characteristics.
-# Model 2:
-#  $$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \delta X_{ijk} + \theta_{j} + \epsilon_{ij} $$
+#  $$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \epsilon_{ij} $$ 
+
+  # Model 1 is a simple linear model with only treatment allocation as the dependent variable, while model 2 also includes a collection of student and household characteristics.
+
+# Model 2: 
+#  $$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \delta X_{ijk} + \theta_{j} + \epsilon_{ij} $$ 
+  
 # Model 3 builds on model two, but includes a fixed effect for the school level. Fixed effect models are used to control for unobserved factors that affect the outcome variable. In this case, the school was chosen as the fixed effect.
+
+
+
+
+
 # # Descriptive statistics
+
 # Table 1
+
+
 # Using n = 5,799 to get the sample actually used in our model (for columns 1-3). Variables selected based on Table 1.
 # Note: Some factor variables are presented in the paper as scale vars.
+
 # House posessions - f_teneviv
 # utilities - s_utilities
 # durable goods - s_durables
@@ -441,27 +293,40 @@ panel.spacing = unit(0.5, "lines"))
 # estrato - f_estrato
 # SISBEN - s_puntaje
 # household income - s_ingtotal
+
+
 table1 <- table1(~ factor(f_teneviv) + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + factor(f_sexo) + s_yrs + factor(f_single) + s_edadhead + s_yrshead + s_tpersona + s_num18 + factor(f_estrato) + s_puntaje + s_ingtotal | ~ factor(T1T2T3), data=filtered_barrera)
+
 table1
+
+
 # # Results
-#
-#
-#
+# 
+# 
+# 
 # - Are these results plausible?
 #   - How robust are the results to changing the sample?
+  
+  
+
 feols_m1 <- feols(data = filtered_barrera,
-at_msamean ~ T1_treat + T2_treat,
-cluster = ~ school_code)
-feols_m2 <- feols(data = filtered_barrera,
-at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,
-cluster = ~ school_code)
-feols_m3 <- feols(data = filtered_barrera,
-at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age | school_code,
-cluster = ~ school_code)
+                  at_msamean ~ T1_treat + T2_treat,
+                  cluster = ~ school_code)
+
+feols_m2 <- feols(data = filtered_barrera, 
+                  at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,
+                  cluster = ~ school_code)
+
+feols_m3 <- feols(data = filtered_barrera, 
+                  at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age | school_code,
+                  cluster = ~ school_code)
+
 # specify hypothesis tests
+
 hyp1 <- linearHypothesis(feols_m1, "T1_treat - T2_treat = 0")
 hyp2 <- linearHypothesis(feols_m2, "T1_treat - T2_treat")
 hyp3 <- linearHypothesis(feols_m3, "T1_treat - T2_treat")
+
 # Save results and format separately from coefficients - there's probably a more elegant way.
 chi1 <- format(round(hyp1[,2][2], 2), nsmall = 2)
 chi2 <- format(round(hyp2[,2][2], 2), nsmall = 2)
@@ -469,44 +334,50 @@ chi3 <- format(round(hyp3[,2][2], 2), nsmall = 2)
 p1 <- format(round(hyp1[,3][2], 2), nsmall = 2)
 p2 <- format(round(hyp2[,3][2], 2), nsmall = 2)
 p3 <- format(round(hyp3[,3][2], 2), nsmall = 2)
+
 rows <- tribble(~term, ~"(1)", ~"(2)", ~"(3)",
-"Chi-squared", chi1, chi2, chi3,
-"p-value", p1, p2, p3)
+                "Chi-squared", chi1, chi2, chi3,
+                "p-value", p1, p2, p3)
 attr(rows, "position") <- c(5,6)
+
 # Adding grouping label to hypothesis test results and grouped column header, also footnotes.
+
+
 # Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
+
 modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates",
-output = "markdown"
+             coef_omit = -c(2,3),
+             gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
+             stars = TRUE,
+             add_rows = rows,
+             coef_rename = c("Basic treatment","Savings treatment"),
+             title = "Table 3 - Effects on Monitored School Attendance Rates"
 ) |>
-kable_styling(latex_options = "striped") |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
+  kable_styling(latex_options = "striped") |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
+  add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
+  footnote(general = "We've created a footnote.",
+           number = c("Footnote 1", "Footnote 2"))
+
 # The table looks ok, but the R-squared should only have two digits after the decimal point. May be possible with gof_map.
+
+
+
+
+
+
 # Graph --> double check code!!!!
+
 ggplot(data=filtered_barrera, aes(x=at_baseline, y=at_msamean, color=factor(T1T2T3))) +
-geom_point() +
-geom_smooth(method="lm", se=FALSE)
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+
+
 ggplot(data=filtered_barrera, aes(x=at_baseline, y=at_msamean, color=factor(T1T2T3))) +
-geom_smooth(method="lm", se=FALSE)+
-xlim(0.65, NA) +
-ylim(0.5, NA)
-# Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
-modelsummary(list(feols_m1, feols_m2, feols_m3),
-coef_omit = -c(2,3),
-gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
-stars = TRUE,
-add_rows = rows,
-coef_rename = c("Basic treatment","Savings treatment"),
-title = "Table 3 - Effects on Monitored School Attendance Rates"
-) |>
-kable_styling(latex_options = "striped") |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
-add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
-footnote(general = "We've created a footnote.",
-number = c("Footnote 1", "Footnote 2"))
+  geom_smooth(method="lm", se=FALSE)+
+  xlim(0.65, NA) +
+  ylim(0.5, NA)
+
+
+
+
+

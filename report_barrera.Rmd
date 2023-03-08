@@ -11,9 +11,6 @@ output:
     toc: yes
     toc_depth: 1
     number_sections: yes
-
-
-
 ---
 
 \newpage
@@ -33,10 +30,10 @@ library(haven)
 library(table1)
 
 # lm.cluster function
-#library(lmtest)
+library(lmtest)
 
 library(ggplot2)
-#library(sandwich)
+library(sandwich)
 
 # visualise residuals for clustered regression
 #library(visreg)
@@ -52,6 +49,9 @@ library(car)            # Durbin-Watson-Test
 library(modelsummary) # modelsummary()
 library(fixest) # feols()
 library(kableExtra)
+library(gridExtra)
+library(clusterSEs) # to get augment method for lm.cluster
+#library(broom) # augment for glm
 
 
 
@@ -401,7 +401,6 @@ modelsummary(list(feols_m1, feols_m2, feols_m3),
              add_rows = rows,
              coef_rename = c("Basic treatment","Savings treatment"),
              title = "Table 3 - Effects on Monitored School Attendance Rates",
-             output = "markdown"
              ) |>
              kable_styling(latex_options = "striped") |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
                                                         add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
@@ -436,7 +435,7 @@ Part of the problem with this model is the outcome variable, which has a ceiling
 
 It may be worthwhile investigating whether there is a significant difference in the proportion above the cut-off between samples.
 
-```{r expl, echo = TRUE}
+```{r expl}
 
 # Create separate cumulative distribution plots of at_msamean for each level of T1T2T3
 
@@ -471,7 +470,8 @@ Binary variable: Whether or not student achieved 80% attendance
 
 
 
-```{r exploration, echo = FALSE}
+```{r glm}
+
 # Calculating new column: is at or above cut-off?
 
 
@@ -479,28 +479,25 @@ filtered_barrera <- filtered_barrera %>%
   mutate(above_cutoff = ifelse(at_msamean >= cutoff, 1, 0))
 
 # Running above model but with this as outcome --> note that the residual plots don't pick up the clustered standard errors.
-library(clusterSEs) # to get augment method for lm.cluster
-library(sandwich)
-library(broom) # augment for glm
 
 mod_bi <- glm(data = filtered_barrera, above_cutoff ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code), family = binomial())
-summary(mod_bi)
+# summary(mod_bi)
 vcov <- vcovCL(mod_bi, cluster = filtered_barrera$school_code)
-coeftest(mod_bi, vcov = vcov)
+#coeftest(mod_bi, vcov = vcov)
 
 
 fitted_bi <- augment(mod_bi, data = filtered_barrera, se_fit = TRUE)
 
 plot_bi <- ggplot(fitted_bi, aes(x = .resid)) +
   geom_histogram(binwidth = 0.01, color = "white", boundary = 50000)
-plot_bi
+# plot_bi
 
 # To compare, running linear model as glm:
 
 mod_gau <- glm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code), family = gaussian())
-summary(mod_gau)
+# summary(mod_gau)
 vcov <- vcovCL(mod_gau, cluster = filtered_barrera$school_code)
-coeftest(mod_gau, vcov = vcov)
+#coeftest(mod_gau, vcov = vcov)
 
 #fitted_gau <- augment(mod_gau, data = filtered_barrera)
 fitted_gau <- augment(mod_gau, data = filtered_barrera, se_fit = TRUE)
@@ -508,9 +505,9 @@ fitted_gau <- augment(mod_gau, data = filtered_barrera, se_fit = TRUE)
 
 plot_gau <- ggplot(fitted_gau, aes(x = .resid)) +
   geom_histogram(binwidth = 0.01, color = "white", boundary = 50000)
-plot_gau
+# plot_gau
 
-library(gridExtra) # to show two plots next to each other - I know there is another way!
+# to show two plots next to each other - I know there is another way!
 # arrange plots side by side
 grid.arrange(plot_bi, plot_gau, nrow = 2)
 

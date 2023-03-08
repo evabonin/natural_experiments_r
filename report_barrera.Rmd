@@ -2,11 +2,18 @@
 title: "Barrera-Osorio et al 2011"
 author: "Dimitrios & Eva"
 date: "`r Sys.Date()`"
-output: 
+output:
+  html_document:
+    toc: yes
+    toc_depth: '1'
+    df_print: paged
   pdf_document:
-    toc: true
+    toc: yes
     toc_depth: 1
-    number_sections: true
+    number_sections: yes
+
+
+
 ---
 
 \newpage
@@ -28,12 +35,11 @@ library(table1)
 # lm.cluster function
 #library(lmtest)
 
-#library(miceadds)
 library(ggplot2)
-library(sandwich)
+#library(sandwich)
 
 # visualise residuals for clustered regression
-library(visreg)
+#library(visreg)
 
 #library(sjPlot)
 #library(sjmisc)
@@ -45,6 +51,8 @@ library(car)            # Durbin-Watson-Test
 
 library(modelsummary) # modelsummary()
 library(fixest) # feols()
+library(kableExtra)
+
 
 
 ```
@@ -74,10 +82,18 @@ For this project, we reference the following files:
 
 
 ## Where does the data come from (country, time period, source)?
-Add
+Data were collected in San Christobal ("Basic" and "Savings" experiments) and in Suba ("Tertiary" experiment) and combined from six different sources:
+* SISBEN surveys 2003 and 2004: Baseline data on eligible families
+* Programme registration data: Basic information on students
+* Administrative records: Enrollment records
+* Direct observation in 68 out of 251 schools: Attendance data in last quarter of 2005 for 7,158 students.
+* Survey in 68 schools: Baseline data collection in 2005. 
+* Survey in 68 schools: Follow-up in 2006.
 
 ## What are the key variables and ow are these measured?
-Add
+Key variables for the replication of Table 3 are the outcome variable, *at_msamean*. This measures the percentage of days absent using a verified attendance measure (see metadata doc) and takes values between 0 and 1 (scale).
+
+Additionally, 
 
 
 # Method
@@ -85,35 +101,38 @@ Add
 ## Research design
 The research paper describes three interventions designed to improve attendance and educational outcomes for students in Colombia.
 
-The first intervention ("basic") is similar to the PROGRESA/OPORTUNIDADES program, a conditional cash transfer program in Mexico that operated from 1997 to 2012. It pays participants 30,000 pesos per month (approximately US$15) if the child attends at least 80% of the days in that month. Payments are made bi-monthly through a dedicated debit card, and students will be removed from the program if they fail to meet attendance targets or are expelled from school.
+The first intervention ("basic") is similar to the PROGRESA/OPORTUNIDADES program, a conditional cash transfer program in Mexico that operated from 1997 to 2012. It pays participants 30,000 pesos per month (approximately USD 15) if the child attends at least 80% of the days in that month. Payments are made bi-monthly through a dedicated debit card, and students will be removed from the program if they fail to meet attendance targets or are expelled from school.
 
-The second intervention, called the savings treatment, pays two-thirds of the monthly amount (20,000 pesos or US$10) to students' families on a bi-monthly basis, while the remaining one-third is held in a bank account. The accumulated funds are then made available to students' families during the period in which students prepare to enroll for the next school year, with 100,000 pesos (US$50) available to them in December if they reach the attendance target every month.
+The second intervention, called the savings treatment, pays two-thirds of the monthly amount (20,000 pesos or USD 10) to students' families on a bi-monthly basis, while the remaining one-third is held in a bank account. The accumulated funds are then made available to students' families during the period in which students prepare to enroll for the next school year, with 100,000 pesos (US$50) available to them in December if they reach the attendance target every month.
 
-The third intervention, called the tertiary treatment, incentivizes students to graduate and matriculate to a higher education institution. The monthly transfer for good attendance is reduced from 30,000 pesos per month to 20,000 pesos, but upon graduating, the student earns the right to receive a transfer of 600,000 pesos (US$300) if they enroll in a tertiary institution, and after a year if they fail to enroll upon graduation.
+The third intervention, called the tertiary treatment, incentivizes students to graduate and matriculate to a higher education institution. The monthly transfer for good attendance is reduced from 30,000 pesos per month to 20,000 pesos, but upon graduating, the student earns the right to receive a transfer of 600,000 pesos (USD 300) if they enroll in a tertiary institution, and after a year if they fail to enroll upon graduation.
 
-All payments are based on reports provided to the Secretary of Education by the students' principals. Students will be removed from the program if they fail to meet attendance targets, fail to matriculate to the next grade twice, or are expelled from school.
+Students were removed from the program if they fail to meet attendance targets, fail to matriculate to the next grade twice, or are expelled from school.
 
+In our replication, we focus on the first and second intervention.
 
-The eligibility criteria for the basic and savings experiments were as follows:
+The eligibility criteria for the "basic" and "savings" experiments were as follows:
 
-* Children had to have finished grade 5 and be enrolled in grades 6 - 11.
+* Children had to have finished grade 5 and be enrolled in grades 6 - 10.
 * The children's families had to be classified into the bottom two categories on Colombia's poverty index (SISBEN).
 * Only households living in San Cristobal prior to 2004 were eligible to participate.
-
-The eligibility criteria for the tertiary education experiment were as follows:
-
-* Children had to have finished grade 8 and be enrolled in grade 9 - 11.
-* The children's families had to be classified into the bottom two categories on Colombia's poverty index, the SISBEN.
-* Only households living in Suba prior to 2004 were eligible to participate.
 
 The paper investigates differences in enrollment and graduation / progression to tertiary education for the three treatment groups compared to untreated controls. Randomization to treatment vs control group was stratified by location, school public vs private, gender and grade.
 
 
 ## Data preparation
 
-some text here
+We imported the data file from STATA format and prepared it for analysis by first turning categorical variables into factors. For convenience when producing graphs, we combined the three treatment indicators into a single factor variable with four expressions (0 = control group, 1 = T1, 2 = T2, 3 = T3).
 
-```{r data_prep, echo = FALSE}
+We then translated the STATA commands to filter the data in line with the inclusion criteria:
+
+-  Dropping ineligible cases from Suba: Drop if suba == 1 
+- Keeping only those who were selected for the survey in schools: survey_selected == 1
+- Drop if grade is < 6 or grade is 11
+
+
+
+```{r data_prep}
 
 # Importing STATA file
 
@@ -166,8 +185,8 @@ filtered_barrera2 <- barrera %>% filter(suba == 1, survey_selected == 1, grade >
 
 ```
 
-ADD: Steps we've taken to use the data.
-The dataset for our analysis is called "filtered_barrera" (put this to R-code).
+The dataset for our analysis is called *filtered_barrera*.
+
 
 
 ## Analysis
@@ -188,98 +207,96 @@ The assumptions about the data underlying linear regression are:
 
 5. No multicollinearity: If there are multiple independent variables in the regression model, there should be no high correlation between these independent variables.
 
-If these assumptions are not met, this can lead to unreliable estimators (regression coefficients) and / or
-biased standard errors, i.e. standard errors that are systematically smaller or larger than the "true" standard error. This means that the relationship between dependent and independent variables is not estimated correctly by the model.
+If these assumptions are not met, this can lead to unreliable estimators (regression coefficients) and / or biased standard errors, i.e. standard errors that are systematically smaller or larger than the "true" standard error. This means that the relationship between dependent and independent variables is not estimated correctly by the model.
 
 
 ### Are these assumptions plausible in this example?
 
-We test the assumptions of the most simple model using the procedure detailed [here](https://godatadrive.com/blog/basic-guide-to-test-assumptions-of-linear-regression-in-r):
+We test the assumptions of the simplest regression model using the procedure detailed [here](https://godatadrive.com/blog/basic-guide-to-test-assumptions-of-linear-regression-in-r).
 
 
-```{r mod0, echo = FALSE}
+```{r mod0, echo = TRUE}
 
+# Setting up model
 mod0 <- lm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat)
+
 # 1. Linearity and 3. heteroskedasticity
 plot(mod0, 1)
+
+# The plot is not what we would typically expect if these assumptions were fulfilled.
 
 # 2. Independence
 durbinWatsonTest(mod0)
 
+# A result for the p-value > 0.05 would suggest we can reject the Null hypothesis and the assumption is met.
+
 # 4. Normality
 plot(mod0, 3)
 
+# This is again not a typical plot.
 
-# Plotting fitted vs actual values
+
+# Plotting fitted vs actual values for T1
+
 # Souce: http://www.sthda.com/english/articles/39-regression-model-diagnostics/161-linear-regression-assumptions-and-diagnostics-in-r-essentials/
+
 model.diag.mod0 <- augment(mod0)
 
 ggplot(model.diag.mod0, aes(at_msamean, T1_treat)) +
   geom_point() +
   stat_smooth(method = lm, se = FALSE) +
-  geom_segment(aes(xend = at_msamean, yend = .fitted), color = "red", size = 0.3)
+  geom_segment(aes(xend = at_msamean, yend = .fitted), color = "red", linewidth = 0.3)
 
+# And another atypical plot.
 
 ```
 
+The plots reflect the model set-up, where averages are estimated by treatment group. There appears to be little variation within groups. This is further explored
+graphically below.
 
-One violation that should be expected based on the data is that of independence. Observations are clustered within schools and also individuals. The authors address this issue by clustering error terms at the school level: 
-
-
-Model 1:
-$$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \epsilon_{ij} $$ 
-
-Model 2: 
-$$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \delta X_{ijk} + \theta_{j} + \epsilon_{ij} $$ 
-
-
-
-
-Fixed effect models: Used to control for unobserved factors that are constant over time at any level of analysis. The key is to identify the appropriate level of analysis for the fixed effect and include it in the model to account for the unobserved factors that affect the outcome variable. In this case, the school was chosen as the fixed effect, while standard errors are clustered within the individual.This reflects the multiple levels of clustering off effects (unobserved school characteristics and unobserved characteristics of individuals).
-
-Problem: While there are some plots built into R, a lot of these just don't work easily with clustered data.
-My workaround: Plotting on the simplest model (model 1) to show that simple linear regression would not have been a good choice. But that seems very obvious.
-
-```{r outcome_var, echo = FALSE}
+```{r outcome_var, echo = TRUE}
 
 # Plotting the outcome variable
 
+# A boxplot for each group
 ggplot(filtered_barrera, aes(x = T1T2T3, y = at_msamean)) +
   geom_boxplot() +    # Box plot for visualization
   labs(x = "Treatment", y = "Attendance %")  # Label the axes
 
+# Histogram of the outcome variable
 
 hist(filtered_barrera$at_msamean)
 
 
 # Create separate histograms of at_msamean for each level of T1T2T3
+
 ggplot(filtered_barrera, aes(x = at_msamean)) +
   geom_histogram(binwidth = 0.07, alpha = 0.5, position = "identity") +
   labs(x = "Attendance %", y = "Frequency") +
   facet_wrap(~T1T2T3, ncol = 3) +
   geom_vline(xintercept = 0.8, color = "red", linetype = "dashed")+
-  theme(panel.border = element_rect(colour = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
         panel.spacing = unit(0.5, "lines"))
-
-# Create separate cumulative distribution plots of at_msamean for each level of T1T2T3
-ggplot(filtered_barrera, aes(x = at_msamean)) +
-  stat_ecdf(aes(color = T1T2T3)) +
-  labs(x = "at_msamean", y = "Cumulative Probability") +
-  facet_wrap(~T1T2T3, ncol = 3) +
-  geom_vline(xintercept = 0.8, color = "red", linetype = "dashed") +
-  theme(panel.border = element_rect(colour = "black", fill = NA, size = 1),
-        panel.spacing = unit(0.5, "lines"))
-
-# What proportion in each group falls at or above the target of 80% attendance?
-
-cutoff <- 0.8  # set the cutoff value
-
-filtered_barrera %>% 
-  group_by(T1T2T3) %>% 
-  summarize(prop_cutoff = sum(at_msamean >= cutoff) / n())
-
 
 ```
+
+We can see that a large proportion of each sample has an attendance record above the 80% requirement, explaining the skew of the distribution observed in the box plots. It is therefore unlikely that 
+
+
+
+## Model specifications
+
+In addition to the above, one violation that should be expected based on the data is that of independence. It is likely that there are unobserved characteristics at the school level (e.g. school culture and rules) that affect the outcome. The following equations show formally how the analyses were conceptualised(where i is the individual and j is the school). While the authors state that standard errors are clustered also clustered within the individual, the STATA code suggests that the only clustering variable was the school (*school code*), and this is what we have replicated below. 
+
+Model 1:
+$$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \epsilon_{ij} $$ 
+Model 1 is a simple linear model with only treatment allocation as the dependent variable, while model 2 also includes a collection of student and household characteristics.
+
+Model 2: 
+$$ y_{ij} = \beta_0 + \beta_{B} Basic_i + \beta_{S} Savings_i + \delta X_{ijk} + \theta_{j} + \epsilon_{ij} $$ 
+
+
+Model 3 builds on model two, but includes a fixed effect for the school level. Fixed effect models are used to control for unobserved factors that affect the outcome variable. In this case, the school was chosen as the fixed effect.
 
 
 
@@ -293,7 +310,7 @@ filtered_barrera %>%
 
 
 
-```{r table1, echo = TRUE}
+```{r table1}
 
 # Table 1
 
@@ -328,45 +345,70 @@ table1
 
 
 
-```{r a, echo = FALSE}
-
-
-```
 
 
 # Results
 
+
+
 - Are these results plausible?
 - How robust are the results to changing the sample?
 
-```{r models, echo = FALSE}
+```{r models}
 
 
-
-# Models
 
 feols_m1 <- feols(data = filtered_barrera,
                at_msamean ~ T1_treat + T2_treat,
                cluster = ~ school_code)
 
-feols_m2 <- feols(data = filtered_barrera,
+feols_m2 <- feols(data = filtered_barrera, 
                   at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,
                   cluster = ~ school_code)
 
-feols_m3 <- feols(data = filtered_barrera,
+feols_m3 <- feols(data = filtered_barrera, 
                   at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age | school_code,
                   cluster = ~ school_code)
 
-
 # specify hypothesis tests
-hypothesis(feols_m1, "T1_treat = T2_treat")
 
-# create summary table with hypothesis test
-modelsummary(feols_m1, hypothesis = "T1_treat = T2_treat")
+hyp1 <- linearHypothesis(feols_m1, "T1_treat - T2_treat = 0")
+hyp2 <- linearHypothesis(feols_m2, "T1_treat - T2_treat")
+hyp3 <- linearHypothesis(feols_m3, "T1_treat - T2_treat")
+
+# Save results and format separately from coefficients - there's probably a more elegant way.
+chi1 <- format(round(hyp1[,2][2], 2), nsmall = 2)
+chi2 <- format(round(hyp2[,2][2], 2), nsmall = 2)
+chi3 <- format(round(hyp3[,2][2], 2), nsmall = 2)
+p1 <- format(round(hyp1[,3][2], 2), nsmall = 2)
+p2 <- format(round(hyp2[,3][2], 2), nsmall = 2)
+p3 <- format(round(hyp3[,3][2], 2), nsmall = 2)
+
+rows <- tribble(~term, ~"(1)", ~"(2)", ~"(3)",
+                "Chi-squared", chi1, chi2, chi3,
+                "p-value", p1, p2, p3)
+attr(rows, "position") <- c(5,6)
+
+# Adding grouping label to hypothesis test results and grouped column header, also footnotes.
 
 
 # Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
-modelsummary(list("Basic" = feols_m1, "feols_m2, feols_m3), coef_omit = -c(2,3), output = "markdown")
+
+modelsummary(list(feols_m1, feols_m2, feols_m3),
+             coef_omit = -c(2,3),
+             gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
+             stars = TRUE,
+             add_rows = rows,
+             coef_rename = c("Basic treatment","Savings treatment"),
+             title = "Table 3 - Effects on Monitored School Attendance Rates",
+             output = "markdown"
+             ) |>
+             kable_styling(latex_options = "striped") |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
+                                                        add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
+                                                                           footnote(general = "We've created a footnote.",
+                                                                                    number = c("Footnote 1", "Footnote 2"))
+
+# The table looks ok, but the R-squared should only have two digits after the decimal point. May be possible with gof_map.
 
 ```
 
@@ -389,13 +431,49 @@ ggplot(data=filtered_barrera, aes(x=at_baseline, y=at_msamean, color=factor(T1T2
 
 # Some exploration
 
-# Part of the problem with this model is the outcome variable, which has a ceiling effect (can't go above 100%, and many people have high attendance, with target attendance also being high at 80%.)
-# Alternative way of approaching this:
-# GLM for skewed data (e.g. log link and gamma function --> would need to fit this more carefully, )
-# Binary variable: Whether or not student achieved 80% attendance
+Part of the problem with this model is the outcome variable, which has a ceiling effect (can't go above 100%, and many people have high attendance, with target attendance also being high at 80%.)
 
 
+It may be worthwhile investigating whether there is a significant difference in the proportion above the cut-off between samples.
+
+```{r expl, echo = TRUE}
+
+# Create separate cumulative distribution plots of at_msamean for each level of T1T2T3
+
+ggplot(filtered_barrera, aes(x = at_msamean)) +
+  stat_ecdf(aes(color = T1T2T3)) +
+  labs(x = "at_msamean", y = "Cumulative Probability") +
+  facet_wrap(~T1T2T3, ncol = 3) +
+  geom_vline(xintercept = 0.8, color = "red", linetype = "dashed") +
+  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        panel.spacing = unit(0.5, "lines"))
+
+
+
+# What proportion in each group falls at or above the target of 80% attendance?
+
+cutoff <- 0.8  # set the cutoff value
+
+filtered_barrera %>% 
+  group_by(T1T2T3) %>% 
+  summarize(prop_cutoff = sum(at_msamean >= cutoff) / n())
+
+```
+
+Variability in the outcome variable is limited because most students attend at least 80% of the time. An alternative model specification may be to analyse differences in proportion of attendance (above / below cut-off).
+
+
+
+
+Alternative way of approaching this:
+GLM for skewed data (e.g. log link and gamma function --> would need to fit this more carefully, )
+Binary variable: Whether or not student achieved 80% attendance
+
+
+
+```{r exploration, echo = FALSE}
 # Calculating new column: is at or above cut-off?
+
 
 filtered_barrera <- filtered_barrera %>% 
   mutate(above_cutoff = ifelse(at_msamean >= cutoff, 1, 0))
@@ -436,8 +514,9 @@ library(gridExtra) # to show two plots next to each other - I know there is anot
 # arrange plots side by side
 grid.arrange(plot_bi, plot_gau, nrow = 2)
 
+```
 
-# GLM with binary outcome variable performs much better on AIC. But I'm not sure the residual plots help us very much as it's not clustered SE!
+GLM with binary outcome variable performs much better on AIC. But I'm not sure the residual plots help us very much as it's not clustered SE!
 
 
 
@@ -455,10 +534,6 @@ Why might they be different?
 * Software: Possible to get STATA standard errors in R
 
 
-```{r b, echo = FALSE}
-
-
-```
 
 Source for clustered standard errors in R: https://evalf21.classes.andrewheiss.com/example/standard-errors/
 

@@ -321,34 +321,39 @@ hyp1 <- linearHypothesis(feols_m1, "T1_treat - T2_treat = 0")
 hyp2 <- linearHypothesis(feols_m2, "T1_treat - T2_treat")
 hyp3 <- linearHypothesis(feols_m3, "T1_treat - T2_treat")
 
-
-# Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
+# Save results and format separately from coefficients - there's probably a more elegant way.
+chi1 <- format(round(hyp1[,2][2], 2), nsmall = 2)
+chi2 <- format(round(hyp2[,2][2], 2), nsmall = 2)
+chi3 <- format(round(hyp3[,2][2], 2), nsmall = 2)
+p1 <- format(round(hyp1[,3][2], 2), nsmall = 2)
+p2 <- format(round(hyp2[,3][2], 2), nsmall = 2)
+p3 <- format(round(hyp3[,3][2], 2), nsmall = 2)
 
 rows <- tribble(~term, ~"(1)", ~"(2)", ~"(3)",
-                "Chi-squared", hyp1[,2][2], hyp2[,2][2], hyp3[,2][2],
-                "p-value", hyp1[,3][2], hyp2[,3][2], hyp3[,3][2],
-                "Demographic controls", 0,1,1)
-attr(rows, "position") <- c(5,6,9)
+                "Chi-squared", chi1, chi2, chi3,
+                "p-value", p1, p2, p3)
+attr(rows, "position") <- c(5,6)
+
+# Adding grouping label to hypothesis test results and grouped column header, also footnotes.
+library(kableExtra)
+
+# Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
 
 modelsummary(list(feols_m1, feols_m2, feols_m3), 
              coef_omit = -c(2,3), 
              gof_omit = "AIC|BIC|RMSE|R2 W|R2 A", 
+             stars = TRUE,
+             output = "latex",
              add_rows = rows,
              coef_rename = c("Basic treatment","Savings treatment"),
              title = "Table 3 - Effects on Monitored School Attendance Rates"
-             )
+             ) |>
+             kable_classic() |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
+                                                        add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
+                                                                           footnote(general = "We've created a footnote.",
+                                                                                    number = c("Footnote 1", "Footnote 2"))
 
-library(lmtest)
-library(sandwich)
-
-feols <- list(feols_m1, feols_m2, feols_m3)
-hyps <- list(hyp1, hyp2, hyp3)
-
-
-modelsummary(feols,
-             coef_omit = -c(2,3), 
-             gof_map = c("nobs", "r.squared"), 
-)
+# The table looks ok, but the R-squared should only have two digits after the decimal point. May be possible with gof_map.
 
 #############################################################################################
 

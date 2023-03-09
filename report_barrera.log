@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.8)  8 MAR 2023 23:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.8)  9 MAR 2023 15:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -589,78 +589,84 @@ No file report_barrera.toc.
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 168.
 (c:/Users/Eva/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [2] [3]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 354.
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 168.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 168.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 168.
+[2] [3]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 344.
 (c:/Users/Eva/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-<report_barrera_files/figure-latex/mod0-1.pdf, id=45, 469.755pt x 325.215pt>
-File: report_barrera_files/figure-latex/mod0-1.pdf Graphic file (type pdf)
-<use report_barrera_files/figure-latex/mod0-1.pdf>
-Package pdftex.def Info: report_barrera_files/figure-latex/mod0-1.pdf  used on input line 363.
+) [4]
+<report_barrera_files/figure-latex/unnamed-chunk-1-1.pdf, id=64, 469.755pt x 325.215pt>
+File: report_barrera_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type pdf)
+<use report_barrera_files/figure-latex/unnamed-chunk-1-1.pdf>
+Package pdftex.def Info: report_barrera_files/figure-latex/unnamed-chunk-1-1.pdf  used on input line 437.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[4]
-<report_barrera_files/figure-latex/mod0-2.pdf, id=63, 469.755pt x 325.215pt>
-File: report_barrera_files/figure-latex/mod0-2.pdf Graphic file (type pdf)
-<use report_barrera_files/figure-latex/mod0-2.pdf>
-Package pdftex.def Info: report_barrera_files/figure-latex/mod0-2.pdf  used on input line 389.
+[5 <./report_barrera_files/figure-latex/unnamed-chunk-1-1.pdf>]
+<report_barrera_files/figure-latex/unnamed-chunk-3-1.pdf, id=78, 469.755pt x 325.215pt>
+File: report_barrera_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
+<use report_barrera_files/figure-latex/unnamed-chunk-3-1.pdf>
+Package pdftex.def Info: report_barrera_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 465.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[5 <./report_barrera_files/figure-latex/mod0-1.pdf>]
-<report_barrera_files/figure-latex/mod0-3.pdf, id=73, 469.755pt x 325.215pt>
-File: report_barrera_files/figure-latex/mod0-3.pdf Graphic file (type pdf)
-<use report_barrera_files/figure-latex/mod0-3.pdf>
-Package pdftex.def Info: report_barrera_files/figure-latex/mod0-3.pdf  used on input line 413.
+<report_barrera_files/figure-latex/unnamed-chunk-4-1.pdf, id=79, 469.755pt x 325.215pt>
+File: report_barrera_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type pdf)
+<use report_barrera_files/figure-latex/unnamed-chunk-4-1.pdf>
+Package pdftex.def Info: report_barrera_files/figure-latex/unnamed-chunk-4-1.pdf  used on input line 488.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[6 <./report_barrera_files/figure-latex/mod0-2.pdf>]
-<report_barrera_files/figure-latex/outcome_var-1.pdf, id=83, 469.755pt x 325.215pt>
+[6 <./report_barrera_files/figure-latex/unnamed-chunk-3-1.pdf>]
+<report_barrera_files/figure-latex/outcome_var-1.pdf, id=89, 469.755pt x 325.215pt>
 File: report_barrera_files/figure-latex/outcome_var-1.pdf Graphic file (type pdf)
 <use report_barrera_files/figure-latex/outcome_var-1.pdf>
-Package pdftex.def Info: report_barrera_files/figure-latex/outcome_var-1.pdf  used on input line 436.
+Package pdftex.def Info: report_barrera_files/figure-latex/outcome_var-1.pdf  used on input line 507.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[7 <./report_barrera_files/figure-latex/mod0-3.pdf>]
-<report_barrera_files/figure-latex/outcome_var-2.pdf, id=94, 469.755pt x 325.215pt>
+[7 <./report_barrera_files/figure-latex/unnamed-chunk-4-1.pdf>]
+<report_barrera_files/figure-latex/outcome_var-2.pdf, id=100, 469.755pt x 325.215pt>
 File: report_barrera_files/figure-latex/outcome_var-2.pdf Graphic file (type pdf)
 <use report_barrera_files/figure-latex/outcome_var-2.pdf>
-Package pdftex.def Info: report_barrera_files/figure-latex/outcome_var-2.pdf  used on input line 446.
+Package pdftex.def Info: report_barrera_files/figure-latex/outcome_var-2.pdf  used on input line 517.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [8 <./report_barrera_files/figure-latex/outcome_var-1.pdf>]
-<report_barrera_files/figure-latex/outcome_var-3.pdf, id=104, 469.755pt x 325.215pt>
+<report_barrera_files/figure-latex/outcome_var-3.pdf, id=110, 469.755pt x 325.215pt>
 File: report_barrera_files/figure-latex/outcome_var-3.pdf Graphic file (type pdf)
 <use report_barrera_files/figure-latex/outcome_var-3.pdf>
-Package pdftex.def Info: report_barrera_files/figure-latex/outcome_var-3.pdf  used on input line 462.
+Package pdftex.def Info: report_barrera_files/figure-latex/outcome_var-3.pdf  used on input line 533.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[9 <./report_barrera_files/figure-latex/outcome_var-2.pdf>]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 482.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 482.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 482.
-[10 <./report_barrera_files/figure-latex/outcome_var-3.pdf>] [11]
+[9 <./report_barrera_files/figure-latex/outcome_var-2.pdf>] [10 <./report_barrera_files/figure-latex/outcome_var-3.pdf>]
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 579.
+[11]
 Overfull \vbox (10.71193pt too high) has occurred while \output is active []
 
 [12]
-Overfull \hbox (149.74318pt too wide) in paragraph at lines 589--589
-[]\T1/lmtt/m/n/10 ## The variables 'f_estrato3', 'f_grade10' and two others have been removed because of collinearity (see $collin.var).[] 
+Overfull \hbox (123.49326pt too wide) in paragraph at lines 684--684
+[]\T1/lmtt/m/n/10 ## The variables 'f_grade10', 'f_grade11' and 'suba' have been removed because of collinearity (see $collin.var).[] 
  []
 
 
-Overfull \hbox (149.74318pt too wide) in paragraph at lines 589--589
-[]\T1/lmtt/m/n/10 ## The variables 'f_estrato3', 'f_grade10' and two others have been removed because of collinearity (see $collin.var).[] 
+Overfull \hbox (123.49326pt too wide) in paragraph at lines 697--697
+[]\T1/lmtt/m/n/10 ## The variables 'f_grade10', 'f_grade11' and 'suba' have been removed because of collinearity (see $collin.var).[] 
  []
 
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 738.
+(c:/Users/Eva/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
+File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [13]
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.613 FE: school_
+l.765 FE: school_
                  code &  &  & X\\ 
 Here is how much of TeX's memory you used:
- 15458 strings out of 477984
- 288234 string characters out of 5837906
+ 15501 strings out of 477984
+ 289197 string characters out of 5837906
  1872382 words of memory out of 5000000
- 35355 multiletter control sequences out of 15000+600000
- 562944 words of font info for 75 fonts, out of 8000000 for 9000
+ 35391 multiletter control sequences out of 15000+600000
+ 563567 words of font info for 77 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,10n,76p,319b,949s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,76p,1076b,968s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 !  ==> Fatal error occurred, no output PDF file produced!

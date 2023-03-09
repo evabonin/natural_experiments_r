@@ -9,8 +9,8 @@ library(lmerTest)
 
 
 
-barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
-#View(barrera)
+barrera <- read_dta("Public_Data_AEJApp_2010-0132.dta")
+
 
 barrera$T1T2T3 <- case_when(
   barrera$T1_treat == 1 ~ 1,
@@ -67,16 +67,17 @@ filtered_barrera <- barrera %>% filter(suba == 0, grade >= 6) %>% filter(survey_
 # Model table 3 for subba==0
 
 mod1 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat,  cluster = "school_code")
-model1 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat, cluster = "school_code")
+
+
 summary(mod1)
-summary(model1)
+
 
 # Model table 3 for suba==1 and grades 9 and 10
 #####
 filtered_barrera2 <- barrera %>% filter(suba == 1, grade >= 6) %>% filter(survey_selected == 1) %>% filter(grade >= 9 ) %>% filter(grade <= 10 )
 
 
-mod4 <- lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat,  cluster = "school_code")
+mod4 <- miceadds::lm.cluster(data = filtered_barrera2, at_msamean ~ T3_treat,  cluster = "school_code")
 
 summary(mod4)
 
@@ -94,7 +95,7 @@ barrera$school_code <- as.factor(barrera$school_code)
 # xi: reg at_msamean T1_treat T2_treat $varbaseline if suba == 0, cluster(school_code);
 # Same model as 1, but including all the demographic variables above
 
-mod2 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age,  cluster = "school_code")
+mod2 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age,  cluster = "school_code")
 
 summary(mod2)
 
@@ -109,7 +110,7 @@ summary(mod2)
 
 filtered_barrera$school_code <- as.factor(filtered_barrera$school_code)
 
-mod3 <- lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age + school_code,  cluster = "school_code")
+mod3 <- miceadds::lm.cluster(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age + school_code,  cluster = "school_code")
 
 model3 <- lm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + s_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + s_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + s_estrato + s_puntaje + s_ingtotal + grade + suba + s_over_age + school_code)
 
@@ -145,11 +146,20 @@ View(df2)
 model1_lmer <- lmer(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat +school_code)
 
 
-ggplot(data=filtered_barrera, aes(x=at_baseline, y=at_msamean, color=factor(T1T2T3))) +
-  geom_point() +
-  geom_smooth(method="lm", se=FALSE)
+
+
+#plot
+
+barrera$T1T2T3 <- case_when(
+  barrera$T1_treat == 1 ~ 1,
+  barrera$T2_treat == 1 ~ 2,
+  barrera$T3_treat == 1 ~ 3,
+  barrera$T1_treat == 0 & barrera$T2_treat == 0 & barrera$T3_treat == 0 ~ 0
+)
+
 
 ggplot(data=filtered_barrera, aes(x=at_baseline, y=at_msamean, color=factor(T1T2T3))) +
   geom_smooth(method="lm", se=FALSE)+
-  xlim(0.65, NA) +
-  ylim(0.5, NA)
+  xlim(0.65, 0.9)+
+  scale_color_discrete(name = "Treatments", labels = c("Control", "Basics", "Savings"))+
+  labs(y = "Actual Attendance ", x = "Predicted Baseline Attendance")

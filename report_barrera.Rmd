@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # packages -> double check that all these are needed.
 
 
-
+library(knitrBootstrap)
 library(dplyr)
 library(haven)
 library(table1)
@@ -133,7 +133,7 @@ We then translated the STATA commands to filter the data in line with the inclus
 
 barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
 
-# Turning variables into factor variables --> is this the correct approach?
+# Turning variables into factor variables
 
 barrera$f_teneviv <- factor(barrera$s_teneviv, levels = c(1, 2, 3, 4), labels = c("Rented", "Mortgaged", "Owned outright", "Other"))
 barrera$f_estcivil <- factor(barrera$s_estcivil, levels = c(1, 2, 3, 4, 5), labels = c("Free union", "Married", "Widow(er)", "Divorced", "Single"))
@@ -415,7 +415,7 @@ attr(rows, "position") <- c(5,6)
 # Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat.
 # Adding grouping label to hypothesis test results and grouped column header, also footnotes.
 
-modelsummary(list(feols_m1, feols_m2, feols_m3) %>%
+table3 <- modelsummary(list(feols_m1, feols_m2, feols_m3) %>%
                setNames(c("Model 1", "Model 2", "Model 3")),
              coef_omit = -c(2,3),
              gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
@@ -424,10 +424,11 @@ modelsummary(list(feols_m1, feols_m2, feols_m3) %>%
              coef_rename = c("Basic treatment","Savings treatment"),
              title = "Table 3 - Effects on Monitored School Attendance Rates",
              ) |>
-             kable_styling(latex_options = "striped") |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
+             kable_styling(bootstrap_options = "basic") |> pack_rows(index = c("Model resuls" = 4, "Basic - Savings = 0" = 2, "Test" = 4)) |>
                                                         add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
                                                                            footnote(general = "We've created a footnote.",
                                                                                     number = c("Footnote 1", "Footnote 2"))
+table3
 
 ```
 
@@ -487,7 +488,9 @@ ggplot(filtered_barrera, aes(x = at_msamean)) +
 
 
 ```
+
 What proportion in each group falls at or above the target of 80% attendance?
+
 
 ```{r expl2}
 
@@ -495,7 +498,9 @@ cutoff <- 0.8  # set the cutoff value
 
 filtered_barrera %>% 
   group_by(T1T2T3) %>% 
-  summarize(prop_cutoff = sum(at_msamean >= cutoff) / n())
+  summarize(prop_cutoff = round(sum(at_msamean >= cutoff),2) / n())
+
+
 
 ```
 
@@ -583,14 +588,16 @@ The residuals for the logistic regression appear to be slightly more "normal", b
 
 Another approach may be to try and fit a more parsimonious model to avoid the risk of colininearity. Many of the covariates appear to be related to poverty. We therefore test if the explanatory power of the model is decreased by removing the variables from Model 3 that may be related to socio-economic status (*f_estrato*), and those that appear related to both poverty and home ownership (utilities, infrastructure, durable goods). We also remove marital status of the head of household, as this is captured in the variable indicating whether the household is headed by a single parent or not. We then compare this model to Model 3, and the logistic regression. 
 
-``` {r parsimony}
+``` {r parsimony1, echo = TRUE}
 
 # Model 3 but removing income, SISBEN score, utilities, durables, infrastructure, durable goods, and civil status of head of household.
 feols_p <- feols(data = filtered_barrera, 
                   at_msamean ~ T1_treat + T2_treat + f_teneviv + s_age_sorteo2 + s_years_back + s_sexo + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato +  f_grade + suba + s_over_age | school_code,
                   cluster = ~ school_code)
 
+``` 
 
+``` {r parsimony2}
 
 # Model outputs
 

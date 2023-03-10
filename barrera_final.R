@@ -3,33 +3,23 @@
 # packages -> double check that all these are needed.
 
 
-#library(knitrBootstrap)
+library(knitrBootstrap)
 library(dplyr)
-
-# reading STATA files
 library(haven)
 library(table1)
-
-# lm.cluster function
-#library(lmtest)
-
+library(flextable)
+library(lmtest)
 library(ggplot2)
-#library(sandwich)
-
-# visualise residuals for clustered regression
-#library(visreg)
-
-#library(sjPlot)
-#library(sjmisc)
-#library(sjlabelled)
-
-library(tidyverse)       # For ggplot, dplyr, and friends
-library(broom)           # Convert model objects into data frames (augment)
-library(car)            # Durbin-Watson-Test
-
-library(modelsummary) # modelsummary()
-library(fixest) # feols()
+library(sandwich)
+library(tidyverse)
+library(broom)
+library(car)
+library(modelsummary)
+library(fixest)
 library(kableExtra)
+library(grid)
+library(gridExtra)
+library(clusterSEs)
 
 
 
@@ -117,16 +107,35 @@ library(kableExtra)
 
 barrera <- read_dta("data/Public_Data_AEJApp_2010-0132.dta")
 
-# Turning variables into factor variables --> is this the correct approach?
 
-barrera$f_teneviv <- factor(barrera$s_teneviv)
+barrera$f_teneviv <- factor(barrera$s_teneviv, levels = c(1, 2, 3, 4), labels = c("Rented", "Mortgaged", "Owned outright", "Other"))
 barrera$f_estcivil <- factor(barrera$s_estcivil, levels = c(1, 2, 3, 4, 5), labels = c("Free union", "Married", "Widow(er)", "Divorced", "Single"))
-barrera$f_estrato <- factor(barrera$s_estrato)
+barrera$f_estrato <- factor(barrera$s_estrato, levels = c(0, 1, 2), labels = c("Class 0", "Class 1", "Class 2"))
 barrera$f_grade <- factor(barrera$grade)
 barrera$f_sexo <- factor(barrera$s_sexo, levels = c(0,1), labels = c("Female", "Male"))
 barrera$f_single <- factor(barrera$s_single, levels = c(0,1), labels = c("No", "Yes"))
 barrera$f_over_age <- factor(barrera$s_over_age, levels = c(0,1), labels = c("No", "Yes"))
 barrera$f_suba <- factor(barrera$suba, levels = c(0,1), labels = c("San Cristobal", "Suba"))
+
+# Labelling variables
+
+label(barrera$f_teneviv) <- "House possession"
+label(barrera$f_estcivil) <- "Marital status of head of household"
+label(barrera$f_estrato) <- "Estrato classification"
+label(barrera$f_grade) <- "Grade"
+label(barrera$f_sexo) <- "Gender"
+label(barrera$f_single) <- "Single parent household"
+label(barrera$f_over_age) <- "Child is older than normal for grade"
+label(barrera$f_suba) <- "Municipality"
+label(barrera$at_msamean) <- "Attendance (%)"
+label(barrera$T1_treat) <- "Basic (T1)"
+label(barrera$T2_treat) <- "Savings (T2)"
+label(barrera$T3_treat) <- "Tertiary (T3)"
+label(barrera$s_utilities) <- "Utilities"			
+label(barrera$s_durables)	<- "Index of durable goods"
+label(barrera$s_infraest_hh) <- "Physical infrastructure index of house"
+label(barrera$s_age_sorteo) <- "Age"
+
 
 
 # Generate one variable to capture treatment assignment (T1, T2, control)
@@ -295,7 +304,12 @@ ggplot(filtered_barrera, aes(x = at_msamean)) +
 # household income - s_ingtotal
 
 
-table1 <- table1(~ factor(f_teneviv) + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + factor(f_sexo) + s_yrs + factor(f_single) + s_edadhead + s_yrshead + s_tpersona + s_num18 + factor(f_estrato) + s_puntaje + s_ingtotal | ~ factor(T1T2T3), data=filtered_barrera)
+table1 <- table1(~ f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + f_sexo + s_yrs + f_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal | ~ factor(T1T2T3), data=filtered_barrera)
+
+t1flex(table1) %>% 
+  save_as_docx(path="outputs/table1.docx")
+
+
 
 table1
 
@@ -307,27 +321,32 @@ table1
 # - Are these results plausible?
 #   - How robust are the results to changing the sample?
   
-  
+# Model 1
+
+# Source https://evalf21.classes.andrewheiss.com/example/standard-errors/
 
 feols_m1 <- feols(data = filtered_barrera,
                   at_msamean ~ T1_treat + T2_treat,
                   cluster = ~ school_code)
 
+# Model 2
+
 feols_m2 <- feols(data = filtered_barrera, 
                   at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age,
                   cluster = ~ school_code)
 
+# Model 3
 feols_m3 <- feols(data = filtered_barrera, 
                   at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age | school_code,
                   cluster = ~ school_code)
 
-# specify hypothesis tests
+# Specify hypothesis tests
 
 hyp1 <- linearHypothesis(feols_m1, "T1_treat - T2_treat = 0")
 hyp2 <- linearHypothesis(feols_m2, "T1_treat - T2_treat")
 hyp3 <- linearHypothesis(feols_m3, "T1_treat - T2_treat")
 
-# Save results and format separately from coefficients - there's probably a more elegant way.
+# Save results and format separately from coefficients.
 chi1 <- format(round(hyp1[,2][2], 2), nsmall = 2)
 chi2 <- format(round(hyp2[,2][2], 2), nsmall = 2)
 chi3 <- format(round(hyp3[,2][2], 2), nsmall = 2)
@@ -335,34 +354,33 @@ p1 <- format(round(hyp1[,3][2], 2), nsmall = 2)
 p2 <- format(round(hyp2[,3][2], 2), nsmall = 2)
 p3 <- format(round(hyp3[,3][2], 2), nsmall = 2)
 
+# Defining additional rows for the table output
+
 rows <- tribble(~term, ~"(1)", ~"(2)", ~"(3)",
                 "Chi-squared", chi1, chi2, chi3,
                 "p-value", p1, p2, p3)
 attr(rows, "position") <- c(5,6)
 
+
+
+# Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat.
 # Adding grouping label to hypothesis test results and grouped column header, also footnotes.
 
-
-# Combining all model outputs into one table and showing only coefficients on T1_treat and T2_treat
-
-modelsummary(list(feols_m1, feols_m2, feols_m3),
+table3 <- modelsummary(list(feols_m1, feols_m2, feols_m3) %>%
+               setNames(c("Model 1", "Model 2", "Model 3")),
              coef_omit = -c(2,3),
              gof_omit = "AIC|BIC|RMSE|R2 W|R2 A",
              stars = TRUE,
              add_rows = rows,
              coef_rename = c("Basic treatment","Savings treatment"),
-             title = "Table 3 - Effects on Monitored School Attendance Rates"
+             title = "Table 3 - Effects on Monitored School Attendance Rates",
 ) |>
-  kable_styling(latex_options = "striped") |> pack_rows(index = c(" " = 4, "Hypothesis: Basic - Savings" = 2)) |>
+  kable_styling(bootstrap_options = "basic") |> pack_rows(index = c("Model resuls" = 4, "Basic - Savings = 0" = 2, "Test" = 4)) |>
   add_header_above(c(" " = 1, "Basic - Savings" = 3)) |>
   footnote(general = "We've created a footnote.",
            number = c("Footnote 1", "Footnote 2"))
 
-# The table looks ok, but the R-squared should only have two digits after the decimal point. May be possible with gof_map.
-
-
-
-
+table3
 
 
 # Graph --> double check code!!!!
@@ -377,6 +395,93 @@ ggplot(data=filtered_barrera, aes(x=at_baseline, y=at_msamean, color=factor(T1T2
   xlim(0.65, NA) +
   ylim(0.5, NA)
 
+
+
+# Exploration
+
+
+cutoff <- 0.8  # set the cutoff value
+
+filtered_barrera %>% 
+  group_by(T1T2T3) %>% 
+  summarize(prop_cutoff = round(sum(at_msamean >= cutoff),2) / n())
+
+
+# Calculating new column: is participant at or above cut-off?
+
+
+filtered_barrera <- filtered_barrera %>% 
+  mutate(above_cutoff = ifelse(at_msamean >= cutoff, 1, 0))
+
+# Running above model but with this as outcome --> note that the residual plots don't pick up the clustered standard errors.
+
+mod_bi <- glm(data = filtered_barrera, above_cutoff ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code), family = binomial())
+
+# vcov1 <- vcovCL(mod_bi, cluster = filtered_barrera$school_code)
+# coeftest(mod_bi, vcov = vcov1)
+
+
+# To compare, running linear model as glm:
+
+mod_gau <- glm(data = filtered_barrera, at_msamean ~ T1_treat + T2_treat + f_teneviv + s_utilities + s_durables + s_infraest_hh + s_age_sorteo + s_age_sorteo2 + s_years_back + s_sexo + f_estcivil + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato + s_puntaje + s_ingtotal + f_grade + suba + s_over_age + factor(school_code), family = gaussian())
+
+# vcov2 <- vcovCL(mod_gau, cluster = filtered_barrera$school_code)
+# coeftest(mod_gau, vcov = vcov2)
+
+
+# Model outputs
+
+bi_gau <- modelsummary(list(mod_bi, mod_gau, feols_m1, feols_m2, feols_m3) %>%
+                         setNames(c("GLM binomial", "GLM Gaussian", "Model 1", "Model 2", "Model 3")),
+                       coef_omit = -c(2, 3),
+                       gof_map = "aic",
+                       stars = TRUE,
+                       coef_rename = c("Basic treatment","Savings treatment"),
+                       title = "Comparison of logistic and linear regressions (no clustered standard errors)")
+bi_gau
+
+
+# Fitted values vs actual values
+
+fitted_bi <- augment(mod_bi, data = filtered_barrera, se_fit = TRUE)
+fitted_gau <- augment(mod_gau, data = filtered_barrera, se_fit = TRUE)
+
+plot_bi <- ggplot(fitted_bi, aes(x = .resid)) +
+  geom_histogram(binwidth = 0.01, color = "white", boundary = 50000)
+plot_bi <- plot_bi + ggtitle("GLM binomial")
+
+# plot_bi
+
+plot_gau <- ggplot(fitted_gau, aes(x = .resid)) +
+  geom_histogram(binwidth = 0.01, color = "white", boundary = 50000)
+plot_gau <- plot_gau + ggtitle("GLM Gaussian")
+# plot_gau
+
+
+# arrange plots side by side
+
+grid.arrange(plot_bi, plot_gau, nrow = 2)
+
+
+# Parsimonious model
+
+# Model 3 but removing income, SISBEN score, utilities, durables, infrastructure, durable goods, and civil status of head of household.
+feols_p <- feols(data = filtered_barrera, 
+                 at_msamean ~ T1_treat + T2_treat + f_teneviv + s_age_sorteo2 + s_years_back + s_sexo + s_single + s_edadhead + s_yrshead + s_tpersona + s_num18 + f_estrato +  f_grade + suba + s_over_age | school_code,
+                 cluster = ~ school_code)
+
+
+
+# Model outputs
+
+parsy <- modelsummary(list(mod_bi, feols_m3, feols_p) %>%
+                        setNames(c("GLM binomial", "Model 3", "Reduced Model 3")),
+                      coef_omit = -c(2, 3),
+                      gof_map = c("aic","r.squared"),
+                      stars = TRUE,
+                      coef_rename = c("Basic treatment","Savings treatment"),
+                      title = "Comparison with parsimonious model")
+parsy
 
 
 
